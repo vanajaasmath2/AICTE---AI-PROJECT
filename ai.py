@@ -1,7 +1,7 @@
 import streamlit as st
 from PyPDF2 import PdfReader
 import pandas as pd
-from sklearn.feature_extraction.text import IfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Function to extract text from PDF
@@ -16,13 +16,13 @@ def extract_text_from_pdf(file):
 def rank resumes(job description, resumes):    
      # Combine job description with resumes
      documents = [job_description] + resumes
-     vectorizer =IfidVectorizer(),fit_transform(documents)
+     vectorizer =TfidVectorizer(),fit_transform(documents)
      vectors = vectorizer.toarray()
 
      #Calculate cosine similarity
      job_description_vector = vectors[0]
      resume_vectors = vectors[1:]
-     cosine_similarities = cosine_similarity([job_description_vector], resume_vectors).flatten
+     cosine_similarities = cosine_similarity([job_description_vector], resume_vectors).flatten()
 
      return cosine_similarities
 
@@ -49,7 +49,7 @@ for file in uploaded_files:
 scores = rank_resumes(job_description, resumes)
 
 # Display scores
-results = pd.DataFrame({"Resume": [file.name for file in uploaded_files],"Score":score})
+results = pd.DataFrame({"Resume": [file.name for file in uploaded_files], "Score": score})
 results = results.sort_values(by="Score", ascending=False)
 
 st.write(results)
